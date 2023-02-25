@@ -1,0 +1,61 @@
+version: '3.3'
+
+services:
+  prometheus:
+    extra_hosts:
+      - me:127.0.0.1
+    image: prom/prometheus:v2.42.0
+    user: root
+    container_name: prometheus
+    restart: always
+    volumes:
+      - $PWD/prometheus:/etc/prometheus:rw
+      - $PWD/prometheus_data:/prometheus:rw
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9090:9090
+    links:
+      - cadvisor:cadvisor
+      - alertmanager:alertmanager
+    depends_on:
+      - cadvisor
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: cadvisor
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    restart: always
+
+#  json-exporter:
+#    image: quay.io/prometheuscommunity/json-exporter:v0.5.0
+#    container_name: json-exporter
+#    ports:
+#      - 7979:7979
+#    volumes:
+#      - $PWD/json-exporter/config.yml:/config.yml
+#    command:
+#      - '--config.file=/config.yml'
+
+#  alertmanager:
+#    image: prom/alertmanager:v0.25.0
+#    container_name: alertmanager
+#    restart: always
+#    ports:
+#      - 9093:9093
+#    volumes:
+#      - $PWD/alertmanager:/etc/alertmanager
+#    command:
+#      - '--config.file=/etc/alertmanager/alertmanager.yml'
+#      - '--storage.path=/alertmanager'
