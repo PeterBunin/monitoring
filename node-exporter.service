@@ -1,0 +1,36 @@
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=node_exporter
+Group=node_exporter
+Type=simple
+ExecStart=/usr/local/bin/node_exporter \
+--web.disable-exporter-metrics \
+--collector.disable-defaults \
+--collector.cpu \
+--collector.cpufreq \
+--collector.diskstats \
+--collector.diskstats.device-exclude="^(ram|loop|fd|nvme\\d+n\\d+p)\\d+$"
+--collector.ethtool \
+--collector.ethtool.device-include=^(eno[0-9])$ \
+--collector.filesystem \
+--collector.filesystem.fs-types-exclude=^(tmpfs|squashfs|nsfs)$ \
+--collector.meminfo \
+--collector.netclass \
+--collector.netclass.ignored-devices=^(veth.+|lo|br.+|docker.+|)$ \
+--collector.netdev \
+--collector.netdev.device-include=^(eno[0-9])$ \
+#--collector.netstat \
+--collector.os \
+--collector.time \
+#--collector.timex
+#--collector.network_route \
+--collector.ntp \
+#--collector.systemd \
+#--collector.tcpstat \
+
+[Install]
+WantedBy=multi-user.target
