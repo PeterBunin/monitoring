@@ -13,24 +13,24 @@ ExecStart=/usr/local/bin/node_exporter \
 --collector.cpu \
 --collector.cpufreq \
 --collector.diskstats \
---collector.diskstats.device-exclude="^(ram|loop|fd|nvme\\d+n\\d+p)\\d+$"
+--collector.diskstats.device-exclude="^(ram|loop|fd|nvme\\d+n\\d+p\\d+m)\\d+$" \
 --collector.ethtool \
 --collector.ethtool.device-include=^(eno[0-9])$ \
 --collector.filesystem \
 --collector.filesystem.fs-types-exclude=^(tmpfs|squashfs|nsfs)$ \
+--collector.hwmon \
+--collector.loadavg \
 --collector.meminfo \
 --collector.netclass \
 --collector.netclass.ignored-devices=^(veth.+|lo|br.+|docker.+|)$ \
 --collector.netdev \
 --collector.netdev.device-include=^(eno[0-9])$ \
-#--collector.netstat \
+--collector.netstat \
 --collector.os \
+--collector.stat \
 --collector.time \
-#--collector.timex
-#--collector.network_route \
---collector.ntp \
-#--collector.systemd \
-#--collector.tcpstat \
+--collector.thermal_zone \
+--collector.uname \
 
 [Install]
 WantedBy=multi-user.target
